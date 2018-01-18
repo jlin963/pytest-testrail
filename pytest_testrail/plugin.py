@@ -6,9 +6,8 @@ import warnings
 
 
 PYTEST_TO_TESTRAIL_STATUS = {
-    "passed": 1,
+    "passed": 6,
     "failed": 5,
-    "skipped": 6,
 }
 
 DT_FORMAT = '%d-%m-%Y %H:%M:%S'

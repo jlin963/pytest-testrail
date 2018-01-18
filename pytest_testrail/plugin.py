@@ -6,7 +6,7 @@ import warnings
 
 
 PYTEST_TO_TESTRAIL_STATUS = {
-    "passed": 1,
+    "passed": 2,
     "failed": 5,
     "skipped": 6,
 }

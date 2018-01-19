@@ -101,25 +101,14 @@ class APIClient:
         headers = kwargs.get('headers', self.headers)
         timeout = kwargs.get('timeout', self.timeout)
         url = self._url + uri
-        try:
-            r = requests.post(
-                url,
-                auth=(self.user, self.password),
-                headers=headers,
-                json=data,
-                verify=cert_check,
-                timeout=timeout
-            )
-        except requests.exceptions.Timeout:
-            print('Timeout occurred, trying once more')
-            r = requests.post(
-                url,
-                auth=(self.user, self.password),
-                headers=headers,
-                json=data,
-                verify=cert_check,
-                timeout=timeout
-            )
+        r = requests.post(
+            url,
+            auth=(self.user, self.password),
+            headers=headers,
+            json=data,
+            verify=cert_check,
+            timeout=timeout
+        )
         return r.json()
 
     @staticmethod

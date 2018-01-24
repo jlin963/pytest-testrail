@@ -133,7 +133,7 @@ class PyTestRailPlugin(object):
             self.testrun_id = 0
         elif self.testrun_id and self.is_testrun_available():
             self.testplan_id = 0
-        elif self.testrun_name and self.is_testrun_available():
+        elif self.testrun_name and self.get_testrun_by_name(self.testrun_name=, self.project_id):
             self.testplan_id = 0
         else:
             if self.testrun_name is None:
@@ -241,6 +241,7 @@ class PyTestRailPlugin(object):
             print('New testrun created with name "{}" and ID={}'.format(testrun_name, self.testrun_id))
 
     def get_testrun_by_name(self, testrun_name, project_id):
+        found = False
         response = self.client.send_get(
             GET_TESTRUN_URL.format(self.project_id),
             self.cert_check
@@ -252,9 +253,10 @@ class PyTestRailPlugin(object):
         else:
             for run in response:
                 if self.testrun_name in run['name'] and run['is_completed'] is False:
-                    run_id = run['id']
+                    self.testrun_id = run['id']
+                    found = True
                     break
-        return run_id
+        return found
 
     def is_testrun_available(self):
         """
@@ -262,17 +264,10 @@ class PyTestRailPlugin(object):
 
         :return: True if testrun exists AND is open
         """
-        if self.testrun_name and self.project_id:
-            runID = self.get_testrun_by_name(self.testrun_name, self.project_id)
-            response = self.client.send_get(
-                GET_TESTRUN_URL.format(runID),
-                cert_check=self.cert_check
-            )
-        else:
-            response = self.client.send_get(
-                GET_TESTRUN_URL.format(self.testrun_id),
-                cert_check=self.cert_check
-            )
+        response = self.client.send_get(
+            GET_TESTRUN_URL.format(self.testrun_id),
+            cert_check=self.cert_check
+        )
         error = self.client.get_error(response)
         if error:
             print('Failed to retrieve testrun: "{}"'.format(error))

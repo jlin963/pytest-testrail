@@ -133,6 +133,8 @@ class PyTestRailPlugin(object):
             self.testrun_id = 0
         elif self.testrun_id and self.is_testrun_available():
             self.testplan_id = 0
+        elif self.testrun_name and self.is_testrun_available():
+            self.testplan_id = 0
         else:
             if self.testrun_name is None:
                 self.testrun_name = testrun_name()
@@ -238,16 +240,38 @@ class PyTestRailPlugin(object):
             self.testrun_id = response['id']
             print('New testrun created with name "{}" and ID={}'.format(testrun_name, self.testrun_id))
 
+    def get_testrun_by_name(self, testrun_name, project_id):
+        response = self.client.send_get(
+            GET_TESTRUN_URL.format(self.project_id),
+            self.cert_check
+        )
+        error = self.client.get_error(response)
+        if error:
+            print('Failed to retrieve testrun: "{}"'.format(error))
+            return False
+        else:
+            for run in response:
+                if self.testrun_name in run['name'] and run['is_completed'] is False:
+                    run_id = run['id']
+                    break
+        return run_id
+
     def is_testrun_available(self):
         """
         Ask if testrun is available in TestRail.
 
         :return: True if testrun exists AND is open
         """
-        response = self.client.send_get(
-            GET_TESTRUN_URL.format(self.testrun_id),
-            cert_check=self.cert_check
-        )
+        if self.testrun_name and self.project_id:
+            response = self.client.send_get(
+                GET_TESTRUN_URL.format(get_testrun_by_name(self.testrun_name, self.project_id)),
+                cert_check=self.cert_check
+            )
+        else:
+            response = self.client.send_get(
+                GET_TESTRUN_URL.format(self.testrun_id),
+                cert_check=self.cert_check
+            )
         error = self.client.get_error(response)
         if error:
             print('Failed to retrieve testrun: "{}"'.format(error))

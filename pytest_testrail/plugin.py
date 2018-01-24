@@ -133,7 +133,7 @@ class PyTestRailPlugin(object):
             self.testrun_id = 0
         elif self.testrun_id and self.is_testrun_available():
             self.testplan_id = 0
-        elif self.testrun_name and self.get_testrun_by_name(self.testrun_name=, self.project_id):
+        elif self.testrun_name and self.get_testrun_by_name(self.testrun_name, self.project_id):
             self.testplan_id = 0
         else:
             if self.testrun_name is None:

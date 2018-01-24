@@ -264,7 +264,7 @@ class PyTestRailPlugin(object):
         """
         if self.testrun_name and self.project_id:
             response = self.client.send_get(
-                GET_TESTRUN_URL.format(get_testrun_by_name(self.testrun_name, self.project_id)),
+                GET_TESTRUN_URL.format(self.get_testrun_by_name(self.testrun_name, self.project_id)),
                 cert_check=self.cert_check
             )
         else:

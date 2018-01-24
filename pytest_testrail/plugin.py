@@ -129,8 +129,15 @@ class PyTestRailPlugin(object):
     def pytest_collection_modifyitems(self, session, config, items):
         tr_keys = get_testrail_keys(items)
 
-        for key in tr_keys:
-            print('key: {}'.format(key))
+        for item in items:
+            if item.get_marker('skip'):
+                testcaseids = item.get_marker('skip').kwargs.get('ids')
+
+                if testcaseids:
+                    self.add_result(
+                        clean_test_ids(testcaseids),
+                        get_test_outcome('skipped'),
+                        'test marked skipped')
 
         if self.testplan_id and self.is_testplan_available():
             self.testrun_id = 0

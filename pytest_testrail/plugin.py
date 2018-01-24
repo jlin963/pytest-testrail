@@ -129,6 +129,9 @@ class PyTestRailPlugin(object):
     def pytest_collection_modifyitems(self, session, config, items):
         tr_keys = get_testrail_keys(items)
 
+        for key in tr_keys:
+            print('key: {}'.format(key))
+
         if self.testplan_id and self.is_testplan_available():
             self.testrun_id = 0
         elif self.testrun_id and self.is_testrun_available():
@@ -161,15 +164,6 @@ class PyTestRailPlugin(object):
                 self.add_result(
                     clean_test_ids(testcaseids),
                     get_test_outcome(outcome.result.outcome),
-                    comment)
-
-        if item.get_marker('skip'):
-            testcaseids = item.get_marker('skip').kwargs.get('ids')
-
-            if testcaseids:
-                self.add_result(
-                    clean_test_ids(testcaseids),
-                    get_test_outcome('skipped'),
                     comment)
 
     def pytest_sessionfinish(self, session, exitstatus):

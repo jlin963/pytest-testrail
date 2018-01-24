@@ -149,7 +149,12 @@ class PyTestRailPlugin(object):
     def pytest_runtest_makereport(self, item, call):
         """ Collect result and associated testcases (TestRail) of an execution """
         outcome = yield
-        rep = outcome.get_result()
+
+        if item.get_marker('skip'):
+            rep = 'skipped'
+        else:
+            rep = outcome.get_result()
+
         comment = ""
         if call.excinfo:
             comment = str(item.repr_failure(call.excinfo))

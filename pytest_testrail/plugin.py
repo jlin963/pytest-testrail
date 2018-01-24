@@ -132,6 +132,7 @@ class PyTestRailPlugin(object):
         for item in items:
             if item.get_marker('skip'):
                 testcaseids = item.get_marker('skip').kwargs.get('ids')
+                print('testcaseids: {}'.format(testcaseids))
 
                 if testcaseids:
                     self.add_result(

@@ -162,14 +162,15 @@ class PyTestRailPlugin(object):
                     clean_test_ids(testcaseids),
                     get_test_outcome(outcome.result.outcome),
                     comment)
-            elif item.get_marker('skip'):
-                testcaseids = item.get_marker('skip').kwargs.get('ids')
 
-                if testcaseids:
-                    self.add_result(
-                        clean_test_ids(testcaseids),
-                        get_test_outcome('skipped'),
-                        comment)
+        if item.get_marker('skip'):
+            testcaseids = item.get_marker('skip').kwargs.get('ids')
+
+            if testcaseids:
+                self.add_result(
+                    clean_test_ids(testcaseids),
+                    get_test_outcome('skipped'),
+                    comment)
 
     def pytest_sessionfinish(self, session, exitstatus):
         """ Publish results in TestRail """

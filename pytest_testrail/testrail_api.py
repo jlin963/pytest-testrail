@@ -43,7 +43,8 @@ class APIClient:
         '''
         self.user = user
         self.password = password
-        self._url = urljoin(base_url, 'index.php?/api/v2/')
+        #self._url = urljoin(base_url, 'index.php?/api/v2/')
+        self.url = 'http://qa-testrail.dc1.lan/index.php?/api/v2/'
         self.headers = kwargs.get('headers', {'Content-Type': 'application/json'})
         self.cert_check = kwargs.get('cert_check', True)
         self.timeout = kwargs.get('timeout', 10.0)
